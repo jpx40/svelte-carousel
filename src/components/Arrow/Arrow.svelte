@@ -1,21 +1,17 @@
 <script>
   import { NEXT, PREV } from '../../direction'
 
-  /**
-   * Indicates direction of the arrow ('next', 'prev')
-   */
-  export let direction = NEXT
+  
 
-  /**
-   * Indicates if button disabled
-   */
-  export let disabled = false
+  
+  /** @type {{direction?: any, disabled?: boolean, onclick?: (event: any) => void}} */
+  let { direction = NEXT, disabled = false, onclick } = $props();
 </script>
 
 <button
   class="sc-carousel-button sc-carousel-arrow__circle"
   class:sc-carousel-arrow__circle_disabled={disabled}
-  on:click
+  {onclick}
 >
   <i
     class="sc-carousel-arrow__arrow"
