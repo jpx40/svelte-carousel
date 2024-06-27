@@ -4,15 +4,11 @@
 
   const dispatch = createEventDispatcher()
 
-  /**
-   * Amount of pages (amount of dots)
-   */
-  export let pagesCount = 1
+  
 
-  /**
-   * Index of the current page
-   */
-  export let currentPageIndex = 0
+  
+  /** @type {{pagesCount?: number, currentPageIndex?: number}} */
+  let { pagesCount = 1, currentPageIndex = 0 } = $props();
 
   function handleDotClick(pageIndex) {
     dispatch('pageChange', pageIndex)
