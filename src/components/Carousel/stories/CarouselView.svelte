@@ -1,77 +1,52 @@
 <script>
   import Carousel from '../Carousel.svelte'
 
-  /**
-   * CSS animation timing function
-   */
-  export let timingFunction = 'ease-in-out';
-
-  /**
-   * Enable Next/Previos arrows
-   */
-  export let arrows = true;
   
-  /**
-   * Infinite looping
-   */
-  export let infinite = true;
 
-  /**
-   * Page to start on
-   */
-  export let initialPageIndex = 1
-
-  /**
-   * Transition duration (ms)
-   */
-  export let duration = 500
-
-  /**
-   * Enables autoplay of pages
-   */
-  export let autoplay = false
-
-  /**
-   * Autoplay change interval
-   */
-  export let autoplayDuration = 3000
-
-  /**
-   * Autoplay change direction ('next', 'prev')
-   */
-  export let autoplayDirection = 'next'
   
-  /**
-   * Pause autoplay on focus
-   */
-  export let pauseOnFocus = false
+  
+  
 
-  /**
-   * Show autoplay duration progress indicator
-   */
-  export let autoplayProgressVisible = false
+  
 
-  /**
-   * Current page indicator dots
-   */
-  export let dots = true
+  
 
-  /**
-   * Enable swiping
-   */
-  export let swiping = true
+  
 
-  /**
-   * Number of particles to show 
-   */
-  export let particlesToShow = 1
+  
 
-  /**
-   * Number of particles to scroll 
-   */
-  export let particlesToScroll = 1
+  
+  
+  
 
-  const colors = [
+  
+
+  
+
+  
+
+  
+
+  
+  /** @type {{timingFunction?: string, arrows?: boolean, infinite?: boolean, initialPageIndex?: number, duration?: number, autoplay?: boolean, autoplayDuration?: number, autoplayDirection?: string, pauseOnFocus?: boolean, autoplayProgressVisible?: boolean, dots?: boolean, swiping?: boolean, particlesToShow?: number, particlesToScroll?: number}} */
+  let {
+    timingFunction = 'ease-in-out',
+    arrows = true,
+    infinite = true,
+    initialPageIndex = 1,
+    duration = 500,
+    autoplay = false,
+    autoplayDuration = 3000,
+    autoplayDirection = 'next',
+    pauseOnFocus = false,
+    autoplayProgressVisible = false,
+    dots = true,
+    swiping = true,
+    particlesToShow = 1,
+    particlesToScroll = 1
+  } = $props();
+
+  const colors = $state([
     { color: '#e5f9f0', text: '0' },
     { color: '#ccf3e2', text: '1' },
     { color: '#b2edd3', text: '2' },
@@ -82,13 +57,13 @@
     { color: '#32cf8b', text: '7' },
     { color: '#19c97d', text: '8' },
     { color: '#00c36f', text: '9' }
-  ]
+  ])
 
-  const colors2 = [
+  const colors2 = $state([
     { color: '#e5f9f0', text: '0' },
     { color: '#ccf3e2', text: '1' },
     { color: '#b2edd3', text: '2' }
-  ]
+  ])
 </script>
 
 <div class="main-container">
