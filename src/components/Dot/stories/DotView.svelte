@@ -1,10 +1,9 @@
 <script>
   import Dot from '../Dot.svelte'
 
-  /**
-   * Indicates if dot is active
-   */
-  export let active = false
+  
+  /** @type {{active?: boolean}} */
+  let { active = $bindable(false) } = $props();
 
   function handleDotClick() {
     active = !active
