@@ -1,14 +1,13 @@
 <script>
-  /**
-   * Indicates if dot is active
-   */
-  export let active = false
+  
+  /** @type {{active?: boolean, onclick?: (event: any) => void}} */
+  let { active = false, onclick } = $props();
 </script>
 
 <button
   class="sc-carousel-button sc-carousel-dot__dot"
   class:sc-carousel-dot__dot_active={active}
-  on:click
+  {onclick}
 ></button>
 
 <style>
