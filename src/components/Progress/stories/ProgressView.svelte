@@ -1,10 +1,9 @@
 <script>
   import Progress from '../Progress.svelte'
 
-  /**
-   * Progress value
-   */
-  export let value = 0
+  
+  /** @type {{value?: number}} */
+  let { value = 0 } = $props();
 </script>
 
 <div class="progress-container">
