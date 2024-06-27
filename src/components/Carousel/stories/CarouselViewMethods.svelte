@@ -2,7 +2,7 @@
   import { onMount } from 'svelte'
   import Carousel from '../Carousel.svelte'
 
-  const colors = [
+  const colors = $state([
     { color: '#e5f9f0', text: '0' },
     { color: '#ccf3e2', text: '1' },
     { color: '#b2edd3', text: '2' },
@@ -13,9 +13,9 @@
     { color: '#32cf8b', text: '7' },
     { color: '#19c97d', text: '8' },
     { color: '#00c36f', text: '9' }
-  ]
+  ])
 
-  let carousel;
+  let carousel = $state();
 
   // goTo
   let pageIndex
@@ -55,16 +55,16 @@
 
   <div class="sb-container">
     <span class="sb-title">carousel.goTo</span>
-    <input class="sb-input" type="number" on:change={handlePageChange} />
-    <button class="sb-button" on:click={handleGoToClick}>Go</button>
+    <input class="sb-input" type="number" onchange={handlePageChange} />
+    <button class="sb-button" onclick={handleGoToClick}>Go</button>
     <div class="sb-divider"></div>
 
     <span class="sb-title">carousel.goToPrev</span>
-    <button class="sb-button" on:click={handleGoToPrevClick}>Go</button>
+    <button class="sb-button" onclick={handleGoToPrevClick}>Go</button>
     <div class="sb-divider"></div>
 
     <span class="sb-title">carousel.goToNext</span>
-    <button class="sb-button" on:click={handleGoToNextClick}>Go</button>
+    <button class="sb-button" onclick={handleGoToNextClick}>Go</button>
     <div class="sb-divider"></div>
   </div>
 </div>
