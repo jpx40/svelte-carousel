@@ -1,4 +1,6 @@
 <script>
+  import { run } from 'svelte/legacy';
+
   import { onDestroy, onMount, tick, createEventDispatcher } from 'svelte'
   import Dots from '../Dots/Dots.svelte'
   import Arrow from '../Arrow/Arrow.svelte'
@@ -19,18 +21,18 @@
   import createCarousel from './createCarousel'
 
   // used for lazy loading images, preloaded only current, adjacent and cloanable images
-  let loaded = []
-  let currentPageIndex
-  $: {
+  let loaded = $state([])
+  let currentPageIndex = $state()
+  run(() => {
     dispatch('pageChange', currentPageIndex)
-  }
+  });
 
-  let progressValue
-  let offset = 0
-  let durationMs = 0
-  let pagesCount = 1
+  let progressValue = $state()
+  let offset = $state(0)
+  let durationMs = $state(0)
+  let pagesCount = $state(1)
 
-  const [{ data, progressManager }, methods, service] = createCarousel((key, value) => {
+  const [{ data, progressManager }, methods, service] = $state(createCarousel((key, value) => {
     switcher({
       'currentPageIndex': () => currentPageIndex = value,
       'progressValue': () => progressValue = value,
@@ -39,104 +41,82 @@
       'pagesCount': () => pagesCount = value,
       'loaded': () => loaded = value,
     })(key)
-  })
+  }))
 
   const dispatch = createEventDispatcher()
 
-  /**
-   * CSS animation timing function
-   * examples: 'linear', 'steps(5, end)', 'cubic-bezier(0.1, -0.6, 0.2, 0)'
-   */
-  export let timingFunction = 'ease-in-out';
+  
 
-  /**
-   * Enable Next/Prev arrows
-   */
-  export let arrows = true
+  
 
-  /**
-   * Infinite looping
-   */
-  export let infinite = true
-  $: {
+  
+  run(() => {
     data.infinite = infinite
-  }
+  });
 
-  /**
-   * Page to start on
-   */
-  export let initialPageIndex = 0
+  
 
-  /**
-   * Transition duration (ms)
-   */
-  export let duration = 500
-  $: {
+  
+  run(() => {
     data.durationMsInit = duration
-  }
+  });
 
-  /**
-   * Enables autoplay of pages
-   */
-  export let autoplay = false
-  $: {
+  
+  run(() => {
     data.autoplay = autoplay
-  }
+  });
 
-  /**
-   * Autoplay change interval (ms)
-   */
-  export let autoplayDuration = 3000
-  $: {
+  
+  run(() => {
     data.autoplayDuration = autoplayDuration
-  }
+  });
 
-  /**
-   * Autoplay change direction ('next', 'prev')
-   */
-  export let autoplayDirection = NEXT
-  $: {
+  
+  run(() => {
     data.autoplayDirection = autoplayDirection
-  }
+  });
 
-  /**
-   * Pause autoplay on focus
-   */
-  export let pauseOnFocus = false
-  $: {
+  
+  run(() => {
     data.pauseOnFocus = pauseOnFocus
-  }
+  });
 
-  /**
-   * Show autoplay duration progress indicator
-   */
-  export let autoplayProgressVisible = false
+  
 
-  /**
-   * Current page indicator dots
-   */
-  export let dots = true
+  
 
-  /**
-   * Enable swiping
-   */
-  export let swiping = true
+  
 
-  /**
-   * Number of particles to show
-   */
-  export let particlesToShow = 1
-  $: {
+  
+  run(() => {
     data.particlesToShowInit = particlesToShow
-  }
+  });
 
-  /**
-   * Number of particles to scroll
-   */
-  export let particlesToScroll = 1
-  $: {
+  
+  /** @type {{timingFunction?: string, arrows?: boolean, infinite?: boolean, initialPageIndex?: number, duration?: number, autoplay?: boolean, autoplayDuration?: number, autoplayDirection?: any, pauseOnFocus?: boolean, autoplayProgressVisible?: boolean, dots?: boolean, swiping?: boolean, particlesToShow?: number, particlesToScroll?: number, prev?: import('svelte').Snippet<[any]>, children?: import('svelte').Snippet<[any]>, next?: import('svelte').Snippet<[any]>, dots_1?: import('svelte').Snippet<[any]>}} */
+  let {
+    timingFunction = 'ease-in-out',
+    arrows = true,
+    infinite = true,
+    initialPageIndex = 0,
+    duration = 500,
+    autoplay = false,
+    autoplayDuration = 3000,
+    autoplayDirection = NEXT,
+    pauseOnFocus = false,
+    autoplayProgressVisible = false,
+    dots = true,
+    swiping = true,
+    particlesToShow = 1,
+    particlesToScroll = 1,
+    prev,
+    children,
+    next,
+    dots_1
+  } = $props();
+  run(() => {
     data.particlesToScrollInit = particlesToScroll
-  }
+  });
 
   export async function goTo(pageIndex, options) {
     const animated = get(options, 'animated', true)
@@ -156,9 +136,9 @@
     await methods.showNextPage({ animated })
   }
 
-  let pageWindowWidth = 0
-  let pageWindowElement
-  let particlesContainer
+  let pageWindowWidth = $state(0)
+  let pageWindowElement = $state()
+  let particlesContainer = $state()
 
   const pageWindowElementResizeObserver = createResizeObserver(({
     width,
@@ -257,7 +237,7 @@
 <div class="sc-carousel__carousel-container">
   <div class="sc-carousel__content-container">
     {#if arrows}
-      <slot name="prev" showPrevPage={methods.showPrevPage}>
+      {#if prev}{@render prev({ showPrevPage: {methods.showPrevPage}, })}{:else}
         <div class="sc-carousel__arrow-container">
           <Arrow
             direction="prev"
@@ -265,26 +245,26 @@
             on:click={showPrevPage}
           />
         </div>
-      </slot>
+      {/if}
     {/if}
     <div
       class="sc-carousel__pages-window"
       bind:this={pageWindowElement}
 
       use:hoverable
-      on:hovered={handleHovered}
+      onhovered={handleHovered}
 
       use:tappable
-      on:tapped={handleTapped}
+      ontapped={handleTapped}
     >
       <div
         class="sc-carousel__pages-container"
         use:swipeable="{{ thresholdProvider: () => pageWindowWidth/3 }}"
-        on:swipeStart={handleSwipeStart}
-        on:swipeMove={handleSwipeMove}
-        on:swipeEnd={handleSwipeEnd}
-        on:swipeFailed={handleSwipeFailed}
-        on:swipeThresholdReached={handleSwipeThresholdReached}
+        onswipeStart={handleSwipeStart}
+        onswipeMove={handleSwipeMove}
+        onswipeEnd={handleSwipeEnd}
+        onswipeFailed={handleSwipeFailed}
+        onswipeThresholdReached={handleSwipeThresholdReached}
         style="
           transform: translateX({offset}px);
           transition-duration: {durationMs}ms;
@@ -292,7 +272,7 @@
         "
         bind:this={particlesContainer}
       >
-        <slot {loaded} {currentPageIndex}></slot>
+        {@render children?.({ loaded, currentPageIndex, })}
       </div>
       {#if autoplayProgressVisible}
         <div class="sc-carousel-progress__container">
@@ -301,7 +281,7 @@
       {/if}
     </div>
     {#if arrows}
-      <slot name="next" showNextPage={methods.showNextPage}>
+      {#if next}{@render next({ showNextPage: {methods.showNextPage}, })}{:else}
         <div class="sc-carousel__arrow-container">
           <Arrow
             direction="next"
@@ -309,22 +289,17 @@
             on:click={methods.showNextPage}
           />
         </div>
-      </slot>
+      {/if}
     {/if}
   </div>
   {#if dots}
-    <slot
-      name="dots"
-      currentPageIndex={currentPageIndex}
-      pagesCount={pagesCount}
-      showPage={handlePageChange}
-    >
+    {#if dots_1}{@render dots_1({ currentPageIndex: {currentPageIndex}, pagesCount: {pagesCount}, showPage: {handlePageChange}, })}{:else}
       <Dots
         pagesCount={pagesCount}
         currentPageIndex={currentPageIndex}
         on:pageChange={event => handlePageChange(event.detail)}
       ></Dots>
-    </slot>
+    {/if}
   {/if}
 </div>
 
