@@ -1,12 +1,11 @@
 <script>
   const MAX_PERCENT = 100;
 
-  /**
-   * Progress value, [0, 1]
-   */
-  export let value = 0
+  
+  /** @type {{value?: number}} */
+  let { value = 0 } = $props();
 
-  $: width = Math.min(Math.max(value * MAX_PERCENT, 0), MAX_PERCENT)
+  let width = $derived(Math.min(Math.max(value * MAX_PERCENT, 0), MAX_PERCENT));
 </script>
 
 <div
