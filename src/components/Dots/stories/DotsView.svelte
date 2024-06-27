@@ -1,15 +1,11 @@
 <script>
   import Dots from '../Dots.svelte'
 
-  /**
-   * Amount of pages (amount of dots)
-   */
-  export let pagesCount = 5
+  
 
-  /**
-   * Index of the current page
-   */
-  export let currentPageIndex = 3
+  
+  /** @type {{pagesCount?: number, currentPageIndex?: number}} */
+  let { pagesCount = 5, currentPageIndex = $bindable(3) } = $props();
 
   function handlePageChange(event) {
     currentPageIndex = event.detail
